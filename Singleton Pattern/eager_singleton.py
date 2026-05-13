@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-MONGO_URI = "mongodb+srv://mehedi2022415897_db_user:xCusNM08Pj1sDVNZ@cluster0.lu2i6u0.mongodb.net/?appName=Cluster0"
+from mongo_config import get_mongo_uri
 
 
 class EagerMongoConnection:
@@ -20,4 +20,4 @@ class EagerMongoConnection:
 
 
 EagerMongoConnection._instance = object.__new__(EagerMongoConnection)
-EagerMongoConnection._instance.client = MongoClient(MONGO_URI)
+EagerMongoConnection._instance.client = MongoClient(get_mongo_uri())

@@ -2,7 +2,7 @@ import time
 import threading
 from pymongo import MongoClient
 
-MONGO_URI = "mongodb+srv://mehedi2022415897_db_user:xCusNM08Pj1sDVNZ@cluster0.lu2i6u0.mongodb.net/?appName=Cluster0"
+from mongo_config import get_mongo_uri
 
 
 class BillPughMongoConnection:
@@ -18,7 +18,7 @@ class BillPughMongoConnection:
                 if cls._SingletonHelper.instance is None:
                     time.sleep(0.05)
                     obj = super().__new__(cls)
-                    obj.client = MongoClient(MONGO_URI)
+                    obj.client = MongoClient(get_mongo_uri())
                     cls._creation_count += 1
                     cls._SingletonHelper.instance = obj
         return cls._SingletonHelper.instance
