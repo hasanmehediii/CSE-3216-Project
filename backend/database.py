@@ -1,8 +1,9 @@
-from motor.motor_asyncio import AsyncIOMotorClient # type: ignore
+from motor.motor_asyncio import AsyncIOMotorClient  # type: ignore
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
+
 
 class Database:
     _instance = None
@@ -11,12 +12,23 @@ class Database:
 
     def __new__(cls):
         if cls._instance is None:
+            mongo_uri = os.getenv("MONGODB_URI") or os.getenv("MONGO_URI")
+            db_name = os.getenv("DB_NAME")
+
+            if not mongo_uri:
+                raise ValueError("Missing MONGODB_URI in .env")
+            if not db_name:
+                raise ValueError("Missing DB_NAME in .env")
+
             cls._instance = super(Database, cls).__new__(cls)
-            cls._client = AsyncIOMotorClient(os.getenv("MONGO_URI"))
-            cls._db = cls._client[os.getenv("DB_NAME")]
-            print("✅ New DB instance created")
+            cls._client = AsyncIOMotorClient(
+                mongo_uri,
+                serverSelectionTimeoutMS=5000,
+            )
+            cls._db = cls._client[db_name]
+            print("New DB instance created")
         else:
-            print("♻️  Returning existing DB instance")
+            print("Returning existing DB instance")
         return cls._instance
 
     def get_db(self):
