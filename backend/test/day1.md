@@ -6,10 +6,10 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn main:app --reload
 ```
-# In another terminal, make multiple requests to the /items endpoint
-1. curl http://localhost:8000/items
-2. curl http://localhost:8000/items
-3. curl http://localhost:8000/items
+# In another terminal, log in and request visible users
+1. curl -X POST http://localhost:8000/auth/login -H "Content-Type: application/json" -d '{"email":"mehedi@example.com","password":"your-password"}'
+2. curl http://localhost:8000/users/visible -H "Authorization: Bearer <paste-token-here>"
+3. curl http://localhost:8000/db-status
 
 ### Test Singleton Behavior
 ```

@@ -1,174 +1,276 @@
+import { useEffect, useMemo, useState } from 'react'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import './Home.css'
 
-const heroImage =
-  'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?auto=format&fit=crop&w=1800&q=85'
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 
-const ovenImage =
-  'https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1100&q=85'
+const roleLabels = {
+  student: 'Student',
+  teacher: 'Teacher',
+  staff: 'Stuff',
+}
 
-const collections = [
-  {
-    tag: 'Ultra Premium',
-    title: 'Truffle & Burrata',
-    description:
-      'Winter black truffles, hand-stretched burrata, and 3D-thermal infused rosemary oil.',
-    price: '$32.00',
-    image:
-      'https://images.unsplash.com/photo-1593504049359-74330189a345?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    tag: 'Signature',
-    title: 'Aged Pepperoni',
-    description:
-      '90-day aged wagyu pepperoni, buffalo mozzarella, and San Marzano micro-reduction.',
-    price: '$28.00',
-    image:
-      'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    tag: 'Seasonal',
-    title: 'The Golden Harvest',
-    description:
-      'Heirloom saffron tomatoes, roasted garlic silk, and 24k edible gold-pressed basil.',
-    price: '$45.00',
-    image:
-      'https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?auto=format&fit=crop&w=900&q=85',
-  },
-]
+async function apiRequest(path, options = {}) {
+  const response = await fetch(`${API_URL}${path}`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
+    ...options,
+  })
 
-const processItems = [
-  {
-    title: 'Molecular Layering',
-    text: 'Automated placement of ingredients ensures the perfect crust-to-sauce ratio in every bite.',
-  },
-  {
-    title: 'Thermal Zoning',
-    text: 'Independent heat control for toppings versus crust, preventing soggy bases and burnt cheese.',
-  },
-  {
-    title: 'Hyper-Rapid Delivery',
-    text: 'Our logistics network is synced with the crafting process for zero-latency fulfillment.',
-  },
-]
-
-const testimonials = [
-  {
-    quote:
-      'The texture profile of the crust was mathematically perfect. I have never experienced consistency like this in artisan food.',
-    name: 'Marcus Chen',
-    role: 'Tech Lead, Aether Corp',
-  },
-  {
-    quote:
-      'Finally, a luxury dining experience that respects the speed of the modern world without sacrificing the soul of the recipe.',
-    name: 'Elara Vance',
-    role: 'Executive Chef, L Orbiten',
-  },
-  {
-    quote:
-      'The Truffle and Burrata is a masterpiece of technical execution. The thermal zoning makes a massive difference.',
-    name: 'Julian Ross',
-    role: 'Design Director, Prism',
-  },
-]
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) {
+    throw new Error(data.detail || data.message || 'Request failed')
+  }
+  return data
+}
 
 function Home() {
-  return (
-    <div className="landing-page">
-      <Navbar />
+  const [currentUser, setCurrentUser] = useState(null)
+  const [visibleUsers, setVisibleUsers] = useState(null)
+  const [mode, setMode] = useState('login')
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'student',
+    department: 'CSE',
+  })
+  const [selectedRole, setSelectedRole] = useState('student')
+  const [message, setMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-      <main>
-        <section className="hero-section" style={{ '--hero-image': `url(${heroImage})` }}>
-          <div className="gold-drip" aria-hidden="true"></div>
-          <div className="hero-content">
-            <p className="eyebrow">Culinary Engineering</p>
-            <h1>
-              Precision-crafted <span>flavor.</span>
-            </h1>
+  const activeRole = currentUser?.role || selectedRole
+
+  const roleButtons = useMemo(
+    () => [
+      { key: 'student', label: 'Student' },
+      { key: 'teacher', label: 'Teacher' },
+      { key: 'staff', label: 'Stuff' },
+    ],
+    [],
+  )
+
+  async function loadVisibleUsers() {
+    const data = await apiRequest('/users/visible')
+    setVisibleUsers(data)
+  }
+
+  useEffect(() => {
+    let isMounted = true
+
+    apiRequest('/auth/me')
+      .then(async (data) => {
+        const visible = await apiRequest('/users/visible')
+        if (isMounted) {
+          setCurrentUser(data.user)
+          setVisibleUsers(visible)
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setCurrentUser(null)
+          setVisibleUsers(null)
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  function selectRole(role) {
+    setSelectedRole(role)
+    setForm((previous) => ({
+      ...previous,
+      role,
+    }))
+  }
+
+  async function submitAuth(event) {
+    event.preventDefault()
+    setIsLoading(true)
+    setMessage('')
+
+    try {
+      const payload =
+        mode === 'register'
+          ? form
+          : {
+              email: form.email,
+              password: form.password,
+            }
+      const data = await apiRequest(`/auth/${mode}`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      })
+      setCurrentUser(data.user)
+      await loadVisibleUsers()
+    } catch (error) {
+      setMessage(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function logout() {
+    await apiRequest('/auth/logout', { method: 'POST' })
+    setCurrentUser(null)
+    setVisibleUsers(null)
+  }
+
+  function updateForm(event) {
+    const { name, value } = event.target
+    if (name === 'role') {
+      setSelectedRole(value)
+    }
+    setForm((previous) => ({ ...previous, [name]: value }))
+  }
+
+  return (
+    <div className="app-shell">
+      <Navbar currentUser={currentUser} onLogout={logout} />
+
+      <main className="workspace">
+        <section className="role-panel">
+          <div>
+            <p className="eyebrow">Abstract Factory Assignment</p>
+            <h1>Campus users by role</h1>
             <p>
-              Experience the pinnacle of artisan pizza through our proprietary
-              3D-thermal technology. Delivered to your doorstep in 30 minutes
-              with mathematical flavor accuracy.
+              Select a role, register or log in, and view the other available user groups from MongoDB.
             </p>
-            <div className="hero-actions">
-              <button type="button">Explore the Collections</button>
-              <button className="ghost" type="button">
-                Technical Specs
+          </div>
+
+          <div className="role-buttons" aria-label="Role selection">
+            {roleButtons.map((role) => (
+              <button
+                className={activeRole === role.key ? 'active' : ''}
+                disabled={isLoading}
+                key={role.key}
+                onClick={() => selectRole(role.key)}
+                type="button"
+              >
+                {role.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="content-grid">
+          <aside className="auth-panel">
+            <div className="tabs">
+              <button className={mode === 'login' ? 'active' : ''} onClick={() => setMode('login')} type="button">
+                Login
+              </button>
+              <button
+                className={mode === 'register' ? 'active' : ''}
+                onClick={() => setMode('register')}
+                type="button"
+              >
+                Register
               </button>
             </div>
-          </div>
-        </section>
 
-        <section className="collection-section">
-          <p className="eyebrow center">Curated Selection</p>
-          <h2>The 2024 Collection</h2>
+            <form onSubmit={submitAuth}>
+              {mode === 'register' && (
+                <>
+                  <label>
+                    Name
+                    <input name="name" onChange={updateForm} required value={form.name} />
+                  </label>
+                  <label>
+                    Role
+                    <select name="role" onChange={updateForm} value={form.role}>
+                      <option value="student">Student</option>
+                      <option value="teacher">Teacher</option>
+                      <option value="staff">Stuff</option>
+                    </select>
+                  </label>
+                  <label>
+                    Department
+                    <input name="department" onChange={updateForm} value={form.department} />
+                  </label>
+                </>
+              )}
 
-          <div className="collection-grid">
-            {collections.map((item) => (
-              <article className="collection-card" key={item.title}>
-                <div className="card-image">
-                  <img src={item.image} alt={item.title} />
-                  <span>{item.tag}</span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div className="card-footer">
-                  <strong>{item.price}</strong>
-                  <button type="button" aria-label={`Add ${item.title}`}>
-                    +
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+              <label>
+                Email
+                <input name="email" onChange={updateForm} required type="email" value={form.email} />
+              </label>
+              <label>
+                Password
+                <input
+                  minLength={6}
+                  name="password"
+                  onChange={updateForm}
+                  required
+                  type="password"
+                  value={form.password}
+                />
+              </label>
 
-        <section className="process-section">
-          <div className="process-copy">
-            <p className="eyebrow">The Science of Flavor</p>
-            <h2>3D Crafting Process</h2>
-            <p className="lead">
-              Our proprietary 3D-thermal technology is not just a gimmick. It is
-              precision engineering for your palate. We map every ingredient to
-              its optimal thermal profile.
-            </p>
+              <button className="primary-action" disabled={isLoading} type="submit">
+                {mode === 'register' ? 'Create Account' : 'Login'}
+              </button>
+            </form>
 
-            <div className="process-list">
-              {processItems.map((item, index) => (
-                <article key={item.title}>
-                  <span>{index + 1}</span>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.text}</p>
-                  </div>
+            {currentUser && (
+              <div className="session-box">
+                <strong>{roleLabels[currentUser.role]}</strong>
+                <span>{currentUser.email}</span>
+              </div>
+            )}
+
+            {message && <p className="status-text">{message}</p>}
+          </aside>
+
+          <section className="users-area">
+            <div className="section-heading">
+              <p className="eyebrow">Visible Users</p>
+              <h2>
+                {currentUser
+                  ? `${roleLabels[currentUser.role]} dashboard`
+                  : 'Login to view users'}
+              </h2>
+            </div>
+
+            <div className="user-columns">
+              {visibleUsers?.columns?.map((column) => (
+                <article className="user-column" key={column.role}>
+                  <h3>{roleLabels[column.role]}</h3>
+                  {column.users.length ? (
+                    column.users.map((user) => (
+                      <div className="user-row" key={user.id}>
+                        <div>
+                          <strong>{user.name}</strong>
+                          <span>{user.department || 'General'}</span>
+                        </div>
+                        <small>{user.email}</small>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="empty-text">No users found.</p>
+                  )}
                 </article>
               ))}
+
+              {!visibleUsers && (
+                <>
+                  <article className="user-column empty-state">
+                    <h3>Column One</h3>
+                    <p>Teacher, student, or stuff users appear here.</p>
+                  </article>
+                  <article className="user-column empty-state">
+                    <h3>Column Two</h3>
+                    <p>The selected role never sees its own group.</p>
+                  </article>
+                </>
+              )}
             </div>
-          </div>
-
-          <div className="oven-card">
-            <img src={ovenImage} alt="Precision pizza crafting oven" />
-          </div>
-        </section>
-
-        <section className="testimonial-section">
-          <div className="testimonial-grid">
-            {testimonials.map((item) => (
-              <article className="testimonial-card" key={item.name}>
-                <span className="stars">*****</span>
-                <p>"{item.quote}"</p>
-                <div className="profile">
-                  <span></span>
-                  <div>
-                    <strong>{item.name}</strong>
-                    <small>{item.role}</small>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+          </section>
         </section>
       </main>
 

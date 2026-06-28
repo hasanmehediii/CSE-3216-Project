@@ -1,0 +1,149 @@
+classDiagram
+    direction LR
+
+    class Database {
+        -_instance
+        -_client
+        -_db
+        +__new__()
+        +get_db()
+    }
+
+    class CampusUser {
+        <<abstract>>
+        +name: str
+        +email: str
+        +password_hash: str
+        +department: str
+        +role
+        +to_document() dict
+    }
+
+    class StudentUser {
+        +title
+        +role
+    }
+
+    class TeacherUser {
+        +title
+        +role
+    }
+
+    class StaffUser {
+        +title
+        +role
+    }
+
+    class CampusUserFactory {
+        -_classes: dict
+        +create(role, name, email, password_hash, department) CampusUser
+    }
+
+    class UserRegister {
+        +name: str
+        +email: str
+        +password: str
+        +role: str
+        +department: str
+    }
+
+    class UserLogin {
+        +email: str
+        +password: str
+    }
+
+    class UserPublic {
+        +id: str
+        +name: str
+        +email: str
+        +role: Role
+        +department: str
+        +title: str
+    }
+
+    class AuthService {
+        +hash_password(password) str
+        +verify_password(password, password_hash) bool
+        +create_access_token(payload) str
+        +decode_access_token(token) dict
+        +register_user(payload) UserPublic
+        +authenticate_user(payload) tuple
+        +get_current_user(request) UserPublic
+    }
+
+    class AuthController {
+        +register(payload, response) dict
+        +login(payload, response) dict
+        +logout(response) dict
+    }
+
+    class AuthRoutes {
+        +post_register()
+        +post_login()
+        +post_logout()
+        +get_me()
+    }
+
+    class UserService {
+        +VISIBLE_ROLES: dict
+        +get_visible_users_for(role) VisibleUsersResponse
+    }
+
+    class UserController {
+        +visible_users(current_user)
+    }
+
+    class UserRoutes {
+        +get_visible_users()
+    }
+
+    class RateLimitMiddleware {
+        +max_requests: int
+        +window_seconds: int
+        +dispatch(request, call_next)
+    }
+
+    class FastAPIApp {
+        +lifespan()
+        +GET /
+        +GET /db-status
+    }
+
+    class ReactFrontend {
+        +select_role()
+        +submit_register()
+        +submit_login()
+        +render_user_columns()
+    }
+
+    CampusUser <|-- StudentUser
+    CampusUser <|-- TeacherUser
+    CampusUser <|-- StaffUser
+    CampusUserFactory ..> CampusUser : creates
+    CampusUserFactory ..> StudentUser
+    CampusUserFactory ..> TeacherUser
+    CampusUserFactory ..> StaffUser
+
+    AuthService ..> CampusUserFactory : creates users
+    AuthService ..> Database : reads/writes users
+    AuthService ..> UserRegister
+    AuthService ..> UserLogin
+    AuthService ..> UserPublic
+
+    AuthController ..> AuthService
+    AuthRoutes ..> AuthController
+    AuthRoutes ..> AuthService : get_current_user
+
+    UserService ..> Database : queries users
+    UserService ..> UserPublic
+    UserController ..> UserService
+    UserRoutes ..> UserController
+    UserRoutes ..> AuthService : requires auth
+
+    FastAPIApp ..> Database : singleton startup/db-status
+    FastAPIApp ..> AuthRoutes
+    FastAPIApp ..> UserRoutes
+    FastAPIApp ..> RateLimitMiddleware
+
+    ReactFrontend ..> AuthRoutes : register/login/logout/me
+    ReactFrontend ..> UserRoutes : visible users

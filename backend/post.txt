@@ -1,7 +1,9 @@
-curl -X POST http://127.0.0.1:8000/items \
+curl -X POST http://127.0.0.1:8000/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Mehedi Hasan",
-    "description": "Name tai ekta brand",
-    "price": 1000.99
+    "email": "mehedi@example.com",
+    "password": "your-password",
+    "role": "student",
+    "department": "CSE"
   }'
