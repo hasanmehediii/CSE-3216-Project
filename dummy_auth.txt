@@ -1,0 +1,16 @@
+student:
+--------
+
+mehedi-2022415897@cs.du.ac.bd
+mehedi
+
+Teacher:
+-----------
+
+messi@gmail.com
+messilm10
+
+stuff:
+-------------
+
+

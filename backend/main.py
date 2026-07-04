@@ -1,16 +1,24 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from database import Database
 from middlewares.rate_limit import RateLimitMiddleware
 from routes.auth import router as auth_router
 from routes.users import router as users_router
+from routes.classrooms import router as classrooms_router
+from routes.posts import router as posts_router
+from routes.notifications import router as notifications_router
+import os
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Database()
     print("App started, DB instance ready")
+
+    # Ensure uploads directory exists
+    os.makedirs(os.path.join(os.getcwd(), "uploads"), exist_ok=True)
 
     yield
 
@@ -33,6 +41,12 @@ app.add_middleware(
 )
 app.include_router(auth_router)
 app.include_router(users_router)
+app.include_router(classrooms_router)
+app.include_router(posts_router)
+app.include_router(notifications_router)
+
+# Mount static files for uploads
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
 @app.get("/")
