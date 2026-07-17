@@ -6,6 +6,9 @@ import Dashboard from './pages/Dashboard';
 import Classroom from './pages/Classroom';
 import Profile from './pages/Profile';
 import Routine from './pages/Routine';
+import LiveExam from './pages/LiveExam';
+import ExamManage from './pages/ExamManage';
+import ExamResult from './pages/ExamResult';
 
 function App() {
   return (
@@ -16,6 +19,9 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/classroom/:id" element={<Classroom />} />
+          <Route path="/classroom/:classroomId/exam/:examId" element={<LiveExam />} />
+          <Route path="/classroom/:classroomId/exam/:examId/manage" element={<ExamManage />} />
+          <Route path="/classroom/:classroomId/exam/:examId/result" element={<ExamResult />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/routine" element={<Routine />} />
         </Routes>

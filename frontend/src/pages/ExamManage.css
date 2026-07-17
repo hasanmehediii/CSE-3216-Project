@@ -1,0 +1,519 @@
+/* ── Exam Management Page ── Teacher Interface ── */
+
+.manage-exam-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 4rem;
+}
+
+/* ── Exam Header ── */
+.exam-manage-header {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  padding: 2rem 2rem;
+  border-radius: var(--radius-xl);
+  margin-bottom: 2rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.exam-manage-header::after {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -5%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.exam-manage-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.exam-manage-header .back-link:hover {
+  color: #fff;
+}
+
+.exam-manage-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.exam-header-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.exam-header-meta .meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.meta-badge.type-badge {
+  background: rgba(99, 102, 241, 0.2);
+  color: #c7d2fe;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.meta-badge.duration-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.meta-badge.state-badge {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.meta-badge.state-draft { background: rgba(156, 163, 175, 0.2); color: #d1d5db; }
+.meta-badge.state-published { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+.meta-badge.state-in_progress { background: rgba(245, 158, 11, 0.2); color: #fde68a; }
+.meta-badge.state-closed { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+.meta-badge.state-graded { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+
+/* ── Action Buttons Row ── */
+.exam-action-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  background: #fff;
+  color: var(--heading);
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+  border: none;
+}
+
+.action-btn.primary:hover {
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+}
+
+.action-btn.danger {
+  background: #fff;
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.action-btn.danger:hover {
+  background: var(--danger-light);
+}
+
+.action-btn.success {
+  background: var(--success);
+  color: #fff;
+  border: none;
+}
+
+.action-btn.success:hover {
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Section Cards ── */
+.manage-section {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.manage-section h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: var(--heading);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Question Editor (Draft) ── */
+.question-editor {
+  margin-bottom: 1.5rem;
+}
+
+.question-form-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.question-form-group .q-number {
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+}
+
+.question-form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.question-form-group input,
+.question-form-group textarea,
+.question-form-group select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--heading);
+  background: #fff;
+  outline: none;
+  transition: all 0.2s ease;
+  margin-bottom: 0.75rem;
+}
+
+.question-form-group input:focus,
+.question-form-group textarea:focus,
+.question-form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.option-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.option-input-group .opt-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+  min-width: 20px;
+}
+
+.option-input-group input {
+  margin-bottom: 0;
+}
+
+.correct-select {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.correct-select select {
+  width: auto;
+  margin-bottom: 0;
+}
+
+.remove-q-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.remove-q-btn:hover {
+  background: var(--danger-light);
+}
+
+.add-question-btns {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.add-q-btn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.2s ease;
+}
+
+.add-q-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+/* ── Submissions / Grading Table ── */
+.submissions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.submissions-table th,
+.submissions-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.submissions-table th {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--surface);
+}
+
+.submissions-table td {
+  color: var(--heading);
+}
+
+.submissions-table .status-submitted {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.submissions-table .status-pending {
+  color: var(--text-secondary);
+}
+
+.mark-input {
+  width: 80px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.mark-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.feedback-input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+/* ── Live Sessions Dashboard ── */
+.sessions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.session-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  text-align: center;
+}
+
+.session-card .student-name {
+  font-weight: 700;
+  color: var(--heading);
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.session-card .session-status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  display: inline-block;
+  margin-top: 0.3rem;
+}
+
+.session-status.active {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.session-status.done {
+  background: rgba(156, 163, 175, 0.1);
+  color: var(--text-secondary);
+}
+
+/* ── Question Preview (Read-only) ── */
+.question-preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.question-preview .qp-number {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+.question-preview .qp-text {
+  font-size: 0.95rem;
+  color: var(--heading);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.question-preview .qp-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.question-preview .qp-option {
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+}
+
+.question-preview .qp-option.correct {
+  background: var(--success-light);
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* ── Student Answer Review ── */
+.student-answers-section {
+  margin-top: 1rem;
+}
+
+.student-answer-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.student-answer-row .sa-question {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 0.3rem;
+}
+
+.student-answer-row .sa-answer {
+  font-size: 0.85rem;
+  color: var(--text);
+  padding: 0.3rem 0;
+}
+
+.student-answer-row .sa-answer.correct {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.student-answer-row .sa-answer.incorrect {
+  color: var(--danger);
+}
+
+/* ── Empty State ── */
+.manage-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.manage-empty svg {
+  opacity: 0.3;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Loading ── */
+.manage-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}

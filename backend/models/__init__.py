@@ -12,3 +12,16 @@ from .user import (
     VisibleUsersResponse,
     normalize_role,
 )
+from .exam import (
+    AnswerSubmit,
+    ExamCreate,
+    ExamDetailPublic,
+    ExamPublic,
+    ExamType,
+    MarkAssign,
+    QuestionCreate,
+    QuestionPublic,
+    StudentResultPublic,
+    StudentSessionPublic,
+)
+

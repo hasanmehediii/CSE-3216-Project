@@ -26,6 +26,10 @@ async def get_classroom(classroom_id: str, current_user: UserPublic = Depends(ge
     # Simple check could be added here to ensure user has access to classroom
     return await classroom_service.get_classroom_by_id(classroom_id)
 
+@router.get("/{classroom_id}/members")
+async def get_classroom_members(classroom_id: str, current_user: UserPublic = Depends(get_current_user)):
+    return await classroom_service.get_classroom_members(classroom_id)
+
 class JoinPinPayload(BaseModel):
     pin: str
 

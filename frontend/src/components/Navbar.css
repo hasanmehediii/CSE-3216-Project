@@ -11,29 +11,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid var(--border);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 0.5rem 1.5rem;
   width: 100%;
   max-width: 1200px;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .brand {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: var(--heading);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--accent);
   text-decoration: none;
-  background: linear-gradient(90deg, var(--gold), #ffdf80);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s;
+}
+
+.brand:hover {
+  opacity: 0.8;
 }
 
 .nav-links {
   display: flex;
-  gap: 1rem;
+  gap: 0.25rem;
   align-items: center;
 }
 
@@ -41,14 +45,15 @@
   color: var(--text);
   text-decoration: none;
   font-weight: 500;
+  font-size: 0.9rem;
   padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   transition: all 0.2s ease;
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--heading);
+  background: var(--accent-light);
+  color: var(--accent);
 }
 
 .nav-actions {
@@ -59,60 +64,55 @@
 .user-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .user-greeting {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--text);
+  font-weight: 500;
 }
 
 .logout-btn {
   background: transparent;
-  color: #ff6b6b;
-  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   padding: 0.4rem 1rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.85rem;
   transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
-  background: rgba(255, 107, 107, 0.1);
-  border-color: #ff6b6b;
-}
-
-.system-status {
-  font-size: 0.8rem;
-  color: var(--gold);
-  border: 1px solid var(--border);
-  padding: 0.3rem 0.8rem;
-  border-radius: 9999px;
+  background: var(--danger-light);
+  border-color: var(--danger);
 }
 
 .auth-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .primary-btn-small {
-  background: linear-gradient(135deg, var(--gold) 0%, #d49500 100%);
-  color: #000;
+  background: var(--accent);
+  color: #fff;
   text-decoration: none;
   padding: 0.5rem 1.2rem;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px var(--accent-glow);
 }
 
 .primary-btn-small:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px -10px var(--gold);
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--accent-glow);
 }
-
 
 .notification-wrapper {
   position: relative;
@@ -124,7 +124,7 @@
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text);
-  padding: 0.5rem;
+  padding: 0.45rem;
   border-radius: 50%;
   cursor: pointer;
   position: relative;
@@ -132,82 +132,94 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  margin-right: 1rem;
+  margin-right: 0.75rem;
 }
 
 .bell-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--heading);
 }
 
 .badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff6b6b;
+  top: -4px;
+  right: -4px;
+  background: var(--danger);
   color: white;
-  font-size: 0.7rem;
-  font-weight: bold;
-  height: 18px;
-  min-width: 18px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  height: 17px;
+  min-width: 17px;
   border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 4px;
+  border: 2px solid #fff;
 }
 
 .notification-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 15px;
-  width: 320px;
-  background: var(--surface);
+  margin-top: 12px;
+  width: 340px;
+  background: #fff;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
   z-index: 2000;
   overflow: hidden;
   text-align: left;
 }
 
 .notification-dropdown h3 {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   margin: 0;
   border-bottom: 1px solid var(--border);
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--heading);
+  font-weight: 700;
 }
 
 .empty-notif {
-  padding: 1rem;
-  color: var(--text);
+  padding: 1.5rem;
+  color: var(--text-secondary);
   text-align: center;
+  font-size: 0.9rem;
 }
 
 .notif-item {
-  padding: 1rem;
+  padding: 0.875rem 1.25rem;
   border-bottom: 1px solid var(--border);
   position: relative;
   transition: background 0.2s;
+  cursor: pointer;
+}
+
+.notif-item:last-child {
+  border-bottom: none;
 }
 
 .notif-item:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface);
 }
 
 .notif-item.unread {
-  background: rgba(248, 182, 18, 0.05);
+  background: var(--accent-light);
 }
 
 .notif-item p {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
+  margin: 0 0 0.35rem 0;
+  font-size: 0.875rem;
   color: var(--heading);
+  line-height: 1.4;
 }
 
 .notif-item small {
-  color: var(--text);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
 }
 
 .read-indicator {
@@ -217,6 +229,20 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--gold);
+  background: var(--accent);
 }
 
+@media (max-width: 768px) {
+  .pill-navbar {
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .user-greeting {
+    display: none;
+  }
+}

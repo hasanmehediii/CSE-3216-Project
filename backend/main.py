@@ -9,6 +9,7 @@ from routes.users import router as users_router
 from routes.classrooms import router as classrooms_router
 from routes.posts import router as posts_router
 from routes.notifications import router as notifications_router
+from routes.exams import router as exams_router
 import os
 
 
@@ -44,6 +45,7 @@ app.include_router(users_router)
 app.include_router(classrooms_router)
 app.include_router(posts_router)
 app.include_router(notifications_router)
+app.include_router(exams_router)
 
 # Mount static files for uploads
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
