@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--navbar-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
   padding: 0.5rem 1.5rem;
@@ -156,7 +156,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 4px;
-  border: 2px solid #fff;
+  border: 2px solid var(--surface-elevated);
 }
 
 .notification-dropdown {
@@ -165,7 +165,7 @@
   right: 0;
   margin-top: 12px;
   width: 340px;
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-xl);

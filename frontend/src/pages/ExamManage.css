@@ -112,7 +112,7 @@
   align-items: center;
   gap: 0.4rem;
   transition: all 0.2s ease;
-  background: #fff;
+  background: var(--surface-elevated);
   color: var(--heading);
 }
 
@@ -132,7 +132,7 @@
 }
 
 .action-btn.danger {
-  background: #fff;
+  background: var(--surface-elevated);
   color: var(--danger);
   border-color: rgba(239, 68, 68, 0.3);
 }
@@ -160,7 +160,7 @@
 
 /* ── Section Cards ── */
 .manage-section {
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 1.5rem;
@@ -224,7 +224,7 @@
   font-family: inherit;
   font-size: 0.9rem;
   color: var(--heading);
-  background: #fff;
+  background: var(--surface-elevated);
   outline: none;
   transition: all 0.2s ease;
   margin-bottom: 0.75rem;

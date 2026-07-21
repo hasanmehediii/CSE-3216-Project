@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: #fff;
+  background: var(--page-bg);
 }
 
 .auth-left-inner {
@@ -103,7 +103,7 @@
 
 .auth-form input,
 .auth-form select {
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid var(--border-strong);
   color: var(--heading);
   padding: 0.7rem 0.9rem;

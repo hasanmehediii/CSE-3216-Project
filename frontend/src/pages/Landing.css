@@ -211,7 +211,7 @@
 
 .stat-card {
   padding: 2rem 1rem;
-  background: #fff;
+  background: var(--surface-elevated);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
